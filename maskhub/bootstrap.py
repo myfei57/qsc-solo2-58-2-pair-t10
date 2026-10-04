@@ -18,7 +18,7 @@ def create_server(settings: Settings | None = None) -> ConsoleServer:
     resolved = settings if settings is not None else load_settings()
     store = RecordStore(resolved.data_dir)
     store.load()
-    runtime = build_runtime(store)
+    runtime = build_runtime(store, settings.watermark_key)
     return ConsoleServer(build_router(runtime), resolved.host, resolved.port)
 
 

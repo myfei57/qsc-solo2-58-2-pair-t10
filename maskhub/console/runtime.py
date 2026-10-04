@@ -10,6 +10,7 @@ from maskhub.policy.registry import PolicyRegistry
 from maskhub.rule.registry import RuleRegistry
 from maskhub.source.registry import SourceRegistry
 from maskhub.store.kvstore import RecordStore
+from maskhub.watermark.registry import WatermarkRegistry
 
 
 @dataclass
@@ -20,9 +21,10 @@ class Runtime:
     datasets: DatasetRegistry
     rules: RuleRegistry
     policies: PolicyRegistry
+    watermarks: WatermarkRegistry
 
 
-def build_runtime(store: RecordStore) -> Runtime:
+def build_runtime(store: RecordStore, watermark_key: bytes | str | None = None) -> Runtime:
     return Runtime(
         store=store,
         journal=Journal(store),
@@ -30,4 +32,5 @@ def build_runtime(store: RecordStore) -> Runtime:
         datasets=DatasetRegistry(store),
         rules=RuleRegistry(store),
         policies=PolicyRegistry(store),
+        watermarks=WatermarkRegistry(store, watermark_key),
     )

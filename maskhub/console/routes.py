@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from functools import partial
 
-from maskhub.console.handlers import audit, catalog, policy, rule, source, system
+from maskhub.console.handlers import audit, catalog, policy, rule, source, system, watermark
 from maskhub.console.http import Request, Response
 from maskhub.console.router import Router
 
@@ -35,6 +35,10 @@ def build_router(runtime) -> Router:
     router.post("/policy/retire", bind(policy.retire_policy, runtime))
     router.post("/policy/coverage", bind(policy.policy_coverage, runtime))
     router.get("/policy/gaps", bind(policy.coverage_gap, runtime))
+
+    router.get("/watermarks", bind(watermark.batches, runtime))
+    router.post("/watermark/prepare", bind(watermark.prepare, runtime))
+    router.post("/watermark/detect", bind(watermark.detect, runtime))
 
     router.get("/audit", bind(audit.list_audit, runtime))
     router.get("/audit/summary", bind(audit.audit_summary, runtime))

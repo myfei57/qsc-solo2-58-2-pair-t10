@@ -16,6 +16,7 @@ class Settings:
     data_dir: str
     host: str
     port: int
+    watermark_key: str | None
 
 
 def parse_listen_address(raw: str) -> tuple[str, int]:
@@ -44,5 +45,11 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
     env = os.environ if environ is None else environ
     data_dir = env.get("MASKHUB_DATA_DIR", "").strip() or DEFAULT_DATA_DIR
     address = env.get("MASKHUB_ADDR", "").strip()
+    watermark_key = env.get("MASKHUB_WATERMARK_KEY", "").strip() or None
     host, port = parse_listen_address(address) if address else (DEFAULT_HOST, DEFAULT_PORT)
-    return Settings(data_dir=data_dir, host=host, port=port)
+    return Settings(
+        data_dir=data_dir,
+        host=host,
+        port=port,
+        watermark_key=watermark_key,
+    )
