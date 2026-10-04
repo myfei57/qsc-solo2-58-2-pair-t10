@@ -4,7 +4,15 @@ from __future__ import annotations
 
 from functools import partial
 
-from maskhub.console.handlers import audit, catalog, policy, rule, source, system
+from maskhub.console.handlers import (
+    audit,
+    catalog,
+    policy,
+    rule,
+    source,
+    system,
+    watermark,
+)
 from maskhub.console.http import Request, Response
 from maskhub.console.router import Router
 
@@ -40,6 +48,15 @@ def build_router(runtime) -> Router:
     router.get("/audit/summary", bind(audit.audit_summary, runtime))
     router.get("/audit/latest", bind(audit.audit_latest, runtime))
     router.get("/audit/action", bind(audit.audit_by_action, runtime))
+
+    router.post("/watermark/profile", bind(watermark.save_profile, runtime))
+    router.get("/watermark/profiles", bind(watermark.list_profiles, runtime))
+    router.post("/watermark/export", bind(watermark.export_dataset, runtime))
+    router.post("/watermark/detect", bind(watermark.detect_leak, runtime))
+    router.get("/watermark/batches", bind(watermark.list_batches, runtime))
+    router.get("/watermark/report", bind(watermark.get_report, runtime))
+    router.post("/watermark/report/redact", bind(watermark.redact_report, runtime))
+    router.post("/watermark/report/verify", bind(watermark.verify_report, runtime))
 
     def route_table(request: Request) -> Response:
         return Response.json(200, {"count": len(router), "routes": router.describe()})

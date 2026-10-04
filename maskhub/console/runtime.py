@@ -10,6 +10,10 @@ from maskhub.policy.registry import PolicyRegistry
 from maskhub.rule.registry import RuleRegistry
 from maskhub.source.registry import SourceRegistry
 from maskhub.store.kvstore import RecordStore
+from maskhub.watermark.batch import BatchRegistry
+from maskhub.watermark.keys import Keyring
+from maskhub.watermark.profile import ProfileRegistry
+from maskhub.watermark.report import ReportRegistry
 
 
 @dataclass
@@ -20,6 +24,10 @@ class Runtime:
     datasets: DatasetRegistry
     rules: RuleRegistry
     policies: PolicyRegistry
+    keyring: Keyring
+    profiles: ProfileRegistry
+    batches: BatchRegistry
+    reports: ReportRegistry
 
 
 def build_runtime(store: RecordStore) -> Runtime:
@@ -30,4 +38,8 @@ def build_runtime(store: RecordStore) -> Runtime:
         datasets=DatasetRegistry(store),
         rules=RuleRegistry(store),
         policies=PolicyRegistry(store),
+        keyring=Keyring(store),
+        profiles=ProfileRegistry(store),
+        batches=BatchRegistry(store),
+        reports=ReportRegistry(store),
     )
